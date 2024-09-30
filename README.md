@@ -1,5 +1,5 @@
 # Devour
-OCR Cue Detection in Vor Files to Add Chapter Markers
+OCR Cue Detection in Vor Files to Add Chapter Markers<br>
 *Requires Mac OS Sequoia (15.0) or newer.  Tested on Apple Silicon only.*
 
 This project has been built to add chapter markers into show recordings made by Vor (or any other show recording solution), based on changes in the current cue.  There is a GUI app, Devour, and also a command-line version DevourCMD.
