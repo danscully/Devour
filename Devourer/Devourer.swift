@@ -56,6 +56,7 @@ actor FrameProvider {
     
     func getFrame(index:Int64) async throws -> CMSampleBuffer? {
         if (Float64(index) / Float64(self.nomFPS)) > CMTimeGetSeconds(self.length) {
+            print ("FATALish ERROR: Index \(index) is out of bounds")
             return nil
         }
         
@@ -139,8 +140,9 @@ class Devourer {
             return observation.topCandidates(1).first?.string
         }
         let joined = recognizedStrings.joined()
-        
-        let eosRegex = /((?:(?:Cue)|(?:CUE)) \d+(\.\d+)?) .*/
+        // print("Joined text: " + joined)
+        // Removed space from end of regex match
+        let eosRegex = /((?:(?:Cue)|(?:CUE)) \d+(\.\d+)?).*/
         var cueLabel:String
         if let match = joined.firstMatch(of: eosRegex) {
             cueLabel = String(match.1)
@@ -264,6 +266,8 @@ class Devourer {
         cues = try await withThrowingTaskGroup(of: [Cue].self, returning: [Cue].self) { taskGroup in
             for batch in batches {
                 taskGroup.addTask {
+                    // print("BATCH:")
+                    // print(batch)
                     
                     let firstBuff = try await frameProvider.getFrame(index: batch.start)
                     let lastBuff = try await frameProvider.getFrame(index: batch.end)
@@ -280,7 +284,10 @@ class Devourer {
                     var localCues: [Cue] = []
                     
                     if (firstCue.tag == lastCue.tag) {
-                        //print("Shortcircuiting")
+                        // print("Shortcircuiting")
+                        // print(firstCue)
+                        // print(lastCue)
+                        
                         if (previousSpanCue == nil) || (previousSpanCue!.tag != firstCue.tag) {
                             localCues.append(firstCue)
                         }

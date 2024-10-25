@@ -58,7 +58,7 @@ func main() async {
 
     let existingPath = URL(fileURLWithPath: path)
     let existingDirectory = existingPath.deletingLastPathComponent()
-    var fileName = existingPath.lastPathComponent
+    let fileName = existingPath.lastPathComponent
     var filenamePieces = fileName.split(separator: ".")
     var newName = ""
     
